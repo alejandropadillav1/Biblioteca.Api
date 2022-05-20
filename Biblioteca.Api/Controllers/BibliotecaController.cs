@@ -14,47 +14,42 @@ namespace Biblioteca.Api.Controllers
     [Route("[controller]/[action]")]
     public class BibliotecaController : ControllerBase
     {
+        private readonly BibliotecaApiContext _context;
 
-
-        public BibliotecaController()
+        public BibliotecaController(BibliotecaApiContext context)
         {
-
+            _context = context;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> ConsultaLibros()
         {
-            return Ok();
+            return Ok(await _context.Libro.ToListAsync());
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Details(int? id)
-        {
-            return Ok();
-        }
 
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("IdLibro,Titulo,Editorial,Autor,Pagina,Descripcion")] Libro libro)
+        public async Task<IActionResult> Agregar( Libro libro)
         {
-            return Ok();
+            _context.Libro.Add(libro);
+            await _context.SaveChangesAsync();
+            return Ok(libro);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Titulo,Editorial,Autor,Pagina,Descripcion")] Libro libro)
+        [HttpPut]
+        public async Task<IActionResult> ActualizarLibro(Libro libro)
         {
-            return Ok();
+            _context.Update(libro);
+            await _context.SaveChangesAsync();
+            return Ok(libro);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(int? id)
+        [HttpDelete]
+        public async Task<IActionResult> BorrarLibro(Libro libro)
         {
-            return Ok();
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
+            _context.Remove(libro);
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
